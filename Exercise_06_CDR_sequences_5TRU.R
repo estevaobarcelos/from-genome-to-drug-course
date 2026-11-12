@@ -12,7 +12,7 @@ pdb <- read.pdb("5TRU")
 
 # Check chains
 unique(pdb$atom$chain)
-# H = heavy chain, L = light chain, A = CTLA-4
+# H = heavy chain, L = light chain, C = CTLA-4
 
 
 # --- 2. Extract CDR sequences (Kabat numbering) -------------
@@ -63,12 +63,12 @@ get_full_seq <- function(pdb, chain) {
 
 seq_H <- get_full_seq(pdb, "H")
 seq_L <- get_full_seq(pdb, "L")
-seq_A <- get_full_seq(pdb, "A")
+seq_C <- get_full_seq(pdb, "C")
 
 cat("\n=== Full sequences ===\n")
 cat("Heavy chain :", nchar(seq_H), "aa\n", seq_H, "\n\n")
 cat("Light chain :", nchar(seq_L), "aa\n", seq_L, "\n\n")
-cat("CTLA-4      :", nchar(seq_A), "aa\n", seq_A, "\n\n")
+cat("CTLA-4      :", nchar(seq_C), "aa\n", seq_C, "\n\n")
 
 
 # --- 4. Save PDB for ChimeraX ------------------------------
@@ -95,7 +95,7 @@ show cartoon
 # 2. Color the 3 chains clearly
 color /H #185fa5     
 color /L #1d9e75     
-color /A #993c1d     
+color /C #993c1d     
 
 # 3. Highlight the 6 CDR loops
 color /H:26-35  #f5c842    
@@ -105,20 +105,12 @@ color /L:24-34  #85b7eb
 color /L:50-56  #378add    
 color /L:89-97  #0c447c    
 
-# 4. Make CDR loops thicker
-cartoon style /H:26-35   xsection round width 1.8 thick 1.8
-cartoon style /H:50-65   xsection round width 1.8 thick 1.8
-cartoon style /H:95-102  xsection round width 1.8 thick 1.8
-cartoon style /L:24-34   xsection round width 1.8 thick 1.8
-cartoon style /L:50-56   xsection round width 1.8 thick 1.8
-cartoon style /L:89-97   xsection round width 1.8 thick 1.8
+# 4. CTLA-4 as transparent surface so you see the interface
+surface /C
+transparency /C 60 target s
 
-# 5. CTLA-4 as transparent surface so you see the interface
-surface /A
-transparency /A 60 target s
-
-# 6. Zoom to the binding interface
-view /H:95-102 /L:89-97 /A
+# 5. Zoom to the binding interface
+view /H:95-102 /L:89-97 /C
 '
 
 writeLines(chimerax_script, "ipilimumab_CDR.cxc")
